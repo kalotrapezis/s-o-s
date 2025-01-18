@@ -1,183 +1,56 @@
+// Event: Button A pressed
 input.onButtonPressed(Button.A, function () {
-    basic.showString("CHOOSE A LETTER BY TITLING RIGHT OR LEFT")
+    basic.showString("CHOOSE A LETTER BY TILTING RIGHT OR LEFT")
     basic.showString("TO GO TO THE NEXT LETTER TILT DOWN")
     basic.showString("TO SEND THE MESSAGE TILT UP")
 })
+// Event: Tilt Down
 input.onGesture(Gesture.LogoUp, function () {
-    MyMessage = "" + MyMessage + Convert
-    basic.showIcon(IconNames.Sword)
-    music.play(music.stringPlayable("A C5 - - - - - - ", 300), music.PlaybackMode.UntilDone)
+    if (MyMessage.length < 100) {
+        // Limit message length
+        MyMessage = "" + MyMessage + Convert
+        basic.showIcon(IconNames.Sword)
+        music.play(music.stringPlayable("A C5 - - - - - - ", 300), music.PlaybackMode.UntilDone)
+    } else {
+        // Show warning for exceeding limit
+        basic.showIcon(IconNames.Skull)
+    }
 })
+// Event: Tilt Left
 input.onGesture(Gesture.TiltLeft, function () {
-    MyLetIn += -1
+    // Prevent going out of bounds
+    MyLetIn = Math.max(MyLetIn - 1, 0)
     Display()
     music.play(music.tonePlayable(294, music.beat(BeatFraction.Whole)), music.PlaybackMode.UntilDone)
     radio.sendString("TYPPING...")
 })
+// Function to display the current letter
 function Display () {
-    if (MyLetIn == 0) {
-        Convert = "A"
-        basic.showString("A")
-    }
-    if (MyLetIn == 1) {
-        Convert = "B"
-        basic.showString("B")
-    }
-    if (MyLetIn == 2) {
-        Convert = "C"
-        basic.showString("C")
-    }
-    if (MyLetIn == 3) {
-        Convert = "D"
-        basic.showString("D")
-    }
-    if (MyLetIn == 4) {
-        Convert = "E"
-        basic.showString("E")
-    }
-    if (MyLetIn == 5) {
-        Convert = "F"
-        basic.showString("F")
-    }
-    if (MyLetIn == 6) {
-        Convert = "G"
-        basic.showString("G")
-    }
-    if (MyLetIn == 7) {
-        Convert = "H"
-        basic.showString("H")
-    }
-    if (MyLetIn == 8) {
-        Convert = "I"
-        basic.showString("I")
-    }
-    if (MyLetIn == 9) {
-        Convert = "J"
-        basic.showString("J")
-    }
-    if (MyLetIn == 10) {
-        Convert = "K"
-        basic.showString("K")
-    }
-    if (MyLetIn == 11) {
-        Convert = "L"
-        basic.showString("L")
-    }
-    if (MyLetIn == 12) {
-        Convert = "M"
-        basic.showString("M")
-    }
-    if (MyLetIn == 13) {
-        Convert = "N"
-        basic.showString("N")
-    }
-    if (MyLetIn == 14) {
-        Convert = "O"
-        basic.showString("O")
-    }
-    if (MyLetIn == 15) {
-        Convert = "P"
-        basic.showString("P")
-    }
-    if (MyLetIn == 16) {
-        Convert = "Q"
-        basic.showString("Q")
-    }
-    if (MyLetIn == 17) {
-        Convert = "R"
-        basic.showString("R")
-    }
-    if (MyLetIn == 18) {
-        Convert = "S"
-        basic.showString("S")
-    }
-    if (MyLetIn == 19) {
-        Convert = "T"
-        basic.showString("T")
-    }
-    if (MyLetIn == 20) {
-        Convert = "U"
-        basic.showString("U")
-    }
-    if (MyLetIn == 21) {
-        Convert = "V"
-        basic.showString("V")
-    }
-    if (MyLetIn == 22) {
-        Convert = "W"
-        basic.showString("W")
-    }
-    if (MyLetIn == 23) {
-        Convert = "X"
-        basic.showString("X")
-    }
-    if (MyLetIn == 24) {
-        Convert = "Y"
-        basic.showString("Y")
-    }
-    if (MyLetIn == 25) {
-        Convert = "Z"
-        basic.showString("Z")
-    }
-    if (MyLetIn == 26) {
-        Convert = "1"
-        basic.showString("1")
-    }
-    if (MyLetIn == 27) {
-        Convert = "2"
-        basic.showString("2")
-    }
-    if (MyLetIn == 28) {
-        Convert = "3"
-        basic.showString("3")
-    }
-    if (MyLetIn == 29) {
-        Convert = "4"
-        basic.showString("4")
-    }
-    if (MyLetIn == 30) {
-        Convert = "5"
-        basic.showString("5")
-    }
-    if (MyLetIn == 31) {
-        Convert = "6"
-        basic.showString("6")
-    }
-    if (MyLetIn == 32) {
-        Convert = "7"
-        basic.showString("7")
-    }
-    if (MyLetIn == 33) {
-        Convert = "8"
-        basic.showString("8")
-    }
-    if (MyLetIn == 34) {
-        Convert = "9"
-        basic.showString("9")
-    }
-    if (MyLetIn == 35) {
-        Convert = "0"
-        basic.showString("0")
+    if (MyLetIn >= 0 && MyLetIn < letters.length) {
+        Convert = letters.charAt(MyLetIn)
+        basic.showString(Convert)
     }
 }
+// Event: Receiving message
 radio.onReceivedString(function (receivedString) {
-    MessageLength = receivedString.length
-    if (receivedString.includes("TYPPING...")) {
+    if (receivedString.indexOf("TYPPING...") != -1) {
         basic.showString("..")
         basic.clearScreen()
-    } else {
+    } else if (receivedString.indexOf("MSG:") == 0) {
         basic.showIcon(IconNames.Heart)
-        basic.showString("  ")
+        // Remove "MSG:" before displaying
         basic.showString(receivedString)
         basic.pause(100)
         basic.clearScreen()
     }
 })
+// Event: Button B pressed
 input.onButtonPressed(Button.B, function () {
-    basic.showString("CHOOSE A LETTER BY TITLING RIGHT OR LEFT")
+    basic.showString("CHOOSE A LETTER BY TILTING RIGHT OR LEFT")
     basic.showString("TO GO TO THE NEXT LETTER TILT DOWN")
     basic.showString("TO SEND THE MESSAGE TILT UP")
 })
+// Event: Shake gesture
 input.onGesture(Gesture.Shake, function () {
     MyLetIn = 0
     MyMessage = ""
@@ -185,12 +58,15 @@ input.onGesture(Gesture.Shake, function () {
     music.play(music.stringPlayable("C D E - - - - - ", 120), music.PlaybackMode.UntilDone)
     Display()
 })
+// Event: Tilt Right
 input.onGesture(Gesture.TiltRight, function () {
-    MyLetIn += 1
+    // Prevent going out of bounds
+    MyLetIn = Math.min(MyLetIn + 1, letters.length - 1)
     Display()
     music.play(music.tonePlayable(349, music.beat(BeatFraction.Whole)), music.PlaybackMode.UntilDone)
     radio.sendString("TYPPING...")
 })
+// Event: Tilt Up
 input.onGesture(Gesture.LogoDown, function () {
     basic.showLeds(`
         # # # # #
@@ -199,13 +75,19 @@ input.onGesture(Gesture.LogoDown, function () {
         . . # . .
         # # # # #
         `)
-    radio.sendString("MESSAGE" + MyMessage)
+    // Prepend "MSG:" to differentiate messages
+    radio.sendString("MSG:" + MyMessage)
+    // Clear message after sending
     MyMessage = ""
     basic.showIcon(IconNames.Yes)
 })
-let MessageLength = 0
 let Convert = ""
 let MyMessage = ""
 let MyLetIn = 0
+let letters = ""
+let MessageLength = 0
+// Array of characters for selection
+letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+// Initialize
 MyLetIn = 0
 Display()
