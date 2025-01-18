@@ -1,15 +1,18 @@
+input.onButtonPressed(Button.A, function () {
+    basic.showString("CHOOSE A LETTER BY TITLING RIGHT OR LEFT")
+    basic.showString("TO GO TO THE NEXT LETTER TILT DOWN")
+    basic.showString("TO SEND THE MESSAGE TILT UP")
+})
 input.onGesture(Gesture.LogoUp, function () {
-    radio.sendString("MESSAGE" + MyMessage)
-    basic.pause(2000)
-    MyMessage = ""
-    basic.showString("MESSAGE SEND")
-    basic.showIcon(IconNames.Yes)
+    MyMessage = "" + MyMessage + Convert
+    basic.showIcon(IconNames.Sword)
+    music.play(music.stringPlayable("A C5 - - - - - - ", 300), music.PlaybackMode.UntilDone)
 })
 input.onGesture(Gesture.TiltLeft, function () {
     MyLetIn += -1
     Display()
-    basic.pause(200)
     music.play(music.tonePlayable(294, music.beat(BeatFraction.Whole)), music.PlaybackMode.UntilDone)
+    radio.sendString("TYPPING...")
 })
 function Display () {
     if (MyLetIn == 0) {
@@ -158,26 +161,51 @@ function Display () {
     }
 }
 radio.onReceivedString(function (receivedString) {
-    basic.showString(receivedString)
+    MessageLength = receivedString.length
+    if (receivedString.includes("TYPPING...")) {
+        basic.showString("..")
+        basic.clearScreen()
+    } else {
+        basic.showIcon(IconNames.Heart)
+        basic.showString("  ")
+        basic.showString(receivedString)
+        basic.pause(100)
+        basic.clearScreen()
+    }
+})
+input.onButtonPressed(Button.B, function () {
+    basic.showString("CHOOSE A LETTER BY TITLING RIGHT OR LEFT")
+    basic.showString("TO GO TO THE NEXT LETTER TILT DOWN")
+    basic.showString("TO SEND THE MESSAGE TILT UP")
 })
 input.onGesture(Gesture.Shake, function () {
     MyLetIn = 0
     MyMessage = ""
     basic.showIcon(IconNames.No)
     music.play(music.stringPlayable("C D E - - - - - ", 120), music.PlaybackMode.UntilDone)
+    Display()
 })
 input.onGesture(Gesture.TiltRight, function () {
     MyLetIn += 1
     Display()
-    basic.pause(200)
     music.play(music.tonePlayable(349, music.beat(BeatFraction.Whole)), music.PlaybackMode.UntilDone)
+    radio.sendString("TYPPING...")
 })
 input.onGesture(Gesture.LogoDown, function () {
-    MyMessage = "" + MyMessage + Convert
-    basic.showIcon(IconNames.Sword)
-    music.play(music.stringPlayable("A C5 - - - - - - ", 300), music.PlaybackMode.UntilDone)
+    basic.showLeds(`
+        # # # # #
+        # . . . #
+        . # . # .
+        . . # . .
+        # # # # #
+        `)
+    radio.sendString("MESSAGE" + MyMessage)
+    MyMessage = ""
+    basic.showIcon(IconNames.Yes)
 })
+let MessageLength = 0
 let Convert = ""
 let MyMessage = ""
 let MyLetIn = 0
 MyLetIn = 0
+Display()
